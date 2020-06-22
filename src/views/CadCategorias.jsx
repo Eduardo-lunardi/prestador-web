@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
 import server from "../services/api";
-import "../styles/login.scss";
 
 
 class CadCategorias extends React.Component {

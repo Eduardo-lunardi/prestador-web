@@ -1,7 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
 import server from "../services/api";
-import "../styles/login.scss";
 import { Link } from 'react-router-dom'
 
 class dash extends React.Component {

@@ -2,7 +2,6 @@ import React from "react";
 import { login } from "../services/auth";
 import { withRouter } from "react-router";
 import server from "../services/api";
-import "../styles/login.scss";
 
 class Login extends React.Component {
   constructor(props) {
