@@ -10,7 +10,7 @@ class cadastrarSocio extends React.Component {
                 nome: "",
                 senha: "",
                 email: "",
-                roles: "",
+                roles: "user",
             },
             errors: {},
         };
@@ -29,6 +29,13 @@ class cadastrarSocio extends React.Component {
             })
             .then(res => {
                 console.log(res);
+                this.setState({
+                    form: {
+                        nome: "",
+                        senha: "",
+                        email: "",
+                    }
+                })
 
             }, err => {
                 if (err.response.data.erro) {
@@ -144,22 +151,6 @@ class cadastrarSocio extends React.Component {
                                 <div className="invalid-feedback">
                                     Verifique seu email.
                                 </div>
-                            </div>
-                            <div className="form-group col-lg-7">
-                                {/* roles */}
-                                <input
-                                    type="text"
-                                    className={
-                                        "form-control custom-input" +
-                                        (this.state.errors.roles ? " is-invalid" : " ")
-                                    }
-                                    placeholder="Tipo de user"
-                                    defaultValue={this.state.form.roles}
-                                    name="roles"
-                                    onChange={(str) => this.handleStates(str, null)}
-                                    onBlur={() => this.validacaoPadrao('roles')}
-                                />
-                                <div className="invalid-feedback">Campo obrigatório!</div>
                             </div>
                             <div className={"form-group text-center mt-5"}>
                                 <button className='btn-custom-primary' onClick={this.cadastroUser} disabled={btnDisabled} >Concluir Cadastro</button>

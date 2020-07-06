@@ -1,5 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import Table from 'react-bootstrap/Table';
 import { faEllipsisH, faPenFancy } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -48,7 +49,7 @@ class pedidoServico extends React.Component {
                             <FontAwesomeIcon icon={faEllipsisH} />
                         </button>
                         <div className="dropdown-menu text-left">
-                            <button className="dropdown-item"  ><FontAwesomeIcon icon={faPenFancy} className='mr-2 fa-fw' />Fazer Pedido</button>
+                            <Link to={`/solicitacao/pedido/${prestador._id}`} className="dropdown-item"  ><FontAwesomeIcon icon={faPenFancy} className='mr-2 fa-fw' />Fazer Pedido</Link>
                         </div>
                     </td>
                 </tr>

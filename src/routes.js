@@ -10,6 +10,11 @@ const App = loadable({
   loading: Loading
 });
 
+const CadUser = loadable({
+  loader: () => import("./views/user/CadastroUser"),
+  loading: Loading
+});
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -31,6 +36,7 @@ const Routes = () => (
   <BrowserRouter>
     <Switch>
       <Route exact path="/login" component={() => <RenderLogin />} />
+      <Route exact path="/cadastrar/usuario" component={CadUser} />
       <PrivateRoute path="/*" component={() => <App />} />
     </Switch>
   </BrowserRouter>

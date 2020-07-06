@@ -29,6 +29,16 @@ const pedidoServico = loadable({
   loading: Loading
 })
 
+const fazerPedido = loadable({
+  loader: () => import("./views/prestador/FazerPedido"),
+  loading: Loading
+})
+
+const Pedidos = loadable({
+  loader: () => import("./views/Pedidos"),
+  loading: Loading
+})
+
 export default class App extends React.Component {
 
   render() {
@@ -40,8 +50,10 @@ export default class App extends React.Component {
             <Route exact path="/cadastrar/user" component={cadastrarUser}></Route>
             <Route exact path="/cadastro/prestador" component={cadastroPrestadores}></Route>
             <Route exact path="/" component={dash}></Route>
+            <Route exact path="/pedidos" component={Pedidos}></Route>
             <Route exact path="/cadastro/categoria" component={cadastroCategoria}></Route>
             <Route exact path="/pedido/servico/:prestador" component={pedidoServico}></Route>
+            <Route exact path="/solicitacao/pedido/:id" component={fazerPedido}></Route>
           </Switch>
         </div>
       </div>

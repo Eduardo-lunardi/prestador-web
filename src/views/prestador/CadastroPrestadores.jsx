@@ -12,7 +12,8 @@ class Parceiros extends React.Component {
                 email: "",
                 telefone: "",
                 servico: "",
-                senha: ""
+                senha: "",
+                roles: "prestador"
             },
             errors: {},
             categorias: []
@@ -28,11 +29,17 @@ class Parceiros extends React.Component {
     cadastrarPrestador(event) {
         event.preventDefault();
         server
-            .post("prestador", this.state.form, {
-                headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-            })
+            .post("prestador", this.state.form)
             .then(res => {
                 console.log(res);
+                this.setState({
+                    form: {
+                        nome: "",
+                        email: "",
+                        telefone: "",
+                        senha: "",
+                    }
+                })
             }, err => {
                 console.log(err);
 
@@ -135,7 +142,7 @@ class Parceiros extends React.Component {
                                     (this.state.errors.nome ? " is-invalid" : " ")
                                 }
                                 placeholder="Nome do prestador"
-                                defaultValue={this.state.form.nome}
+                                value={this.state.form.nome}
                                 name="nome"
                                 onChange={(str) => this.handleStates(str, null)}
                                 onBlur={() => this.validacaoPadrao('nome')}
@@ -151,7 +158,7 @@ class Parceiros extends React.Component {
                                     (this.state.errors.email ? " is-invalid" : " ")
                                 }
                                 placeholder="Email"
-                                defaultValue={this.state.form.email}
+                                value={this.state.form.email}
                                 name="email"
                                 onChange={(str) => this.handleStates(str, null)}
                                 onBlur={this.validarEmail}
@@ -182,7 +189,7 @@ class Parceiros extends React.Component {
                                     (this.state.errors.telefone ? " is-invalid" : " ")
                                 }
                                 placeholder="Número de telefone"
-                                defaultValue={this.state.form.telefone}
+                                value={this.state.form.telefone}
                                 name="telefone"
                                 onChange={(str) => this.handleStates(str, null)}
                                 onBlur={() => this.validacaoPadrao('telefone')}
@@ -200,7 +207,7 @@ class Parceiros extends React.Component {
                                     (this.state.errors.senha ? " is-invalid" : " ")
                                 }
                                 placeholder="Senha"
-                                defaultValue={this.state.form.senha}
+                                value={this.state.form.senha}
                                 name="senha"
                                 onChange={(str) => this.handleStates(str, null)}
                                 onBlur={() => this.validacaoPadrao('senha')}

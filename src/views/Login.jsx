@@ -1,6 +1,7 @@
 import React from "react";
 import { login } from "../services/auth";
 import { withRouter } from "react-router";
+import { Link } from "react-router-dom";
 import server from "../services/api";
 
 class Login extends React.Component {
@@ -11,12 +12,9 @@ class Login extends React.Component {
         email: "",
         senha: "",
       },
-      init: true,
       errors: {},
       erroBack: null,
     };
-    this.handlePassword = this.handlePassword.bind(this);
-    this.handleCpf = this.handleCpf.bind(this);
     this.fazerLogin = this.fazerLogin.bind(this);
     this.verificarInputs = this.verificarInputs.bind(this);
     this.validarEmail = this.validarEmail.bind(this);
@@ -43,43 +41,32 @@ class Login extends React.Component {
     } else {
       delete errors.senha;
     }
-    this.setState({ errors: errors, init: false });
+    this.setState({ errors: errors });
   }
 
-  // verificar todos os inputs
   verificarInputs() {
-    let errors = this.state.errors;
-    if (
-      process.env.NODE_ENV === "development" &&
-      this.state.form.cpf === "666.666.666-66"
-    ) {
-      delete errors.cpf;
-    } else {
-
-      delete errors.cpf;
-
+    let err = this.state.erros || {};
+    for (let x in this.state.form) {
+      if (!this.state.form[x] || this.state.form[x].length <= 0) {
+        err[x] = true;
+      }
     }
 
-    if (this.state.form.senha.length <= 2) {
-      errors.senha = true;
-    } else {
-      delete errors.senha;
-    }
 
-    this.setState({ errors: errors, init: false });
-    return Object.keys(errors).length;
+    return Object.keys(err).length > 0;
   }
 
   fazerLogin(event) {
     event.preventDefault();
-
-    if (this.verificarInputs() === 0) {
+    if (this.verificarInputs() === false) {
       server
         .post("/login", this.state.form)
         .then(
           (res) => {
-            login({ token: res.data.token, refreshToken: res.data.refreshToken, nome: res.data.usuario.nome });
-            this.props.history.push("/dash");
+            console.log(res);
+            
+            login({ token: res.data.token, refreshToken: res.data.refreshToken, nome: res.data.usuario.nome, roles: res.data.usuario.roles, prest_id: res.data.usuario._id });
+            this.props.history.push("/");
           },
           (err) => {
             if (err.response && err.response.data.erro) {
@@ -90,25 +77,6 @@ class Login extends React.Component {
           }
         );
     }
-  }
-
-  handlePassword({ target }) {
-    let { value } = target;
-    this.setState((old) => ({
-      form: {
-        ...old.form,
-        senha: value,
-      },
-    }));
-  }
-
-  handleCpf(str) {
-    this.setState((old) => ({
-      form: {
-        ...old.form,
-        cpf: str,
-      },
-    }));
   }
 
   handleStates(obj, value) {
@@ -126,66 +94,62 @@ class Login extends React.Component {
     let erro = this.state.erroBack ? (
       <div className="alert alert-danger">{this.state.erroBack}</div>
     ) : null;
+    let btnDisabled = this.verificarInputs()
+
     return (
-      <section className={"container container-login"}>
-        <div className="col-lg-7 col-md-9 col-sm-12 m-auto">
-          <div className="card card-login">
-            <form className="text-center">
-              {/* <img
-                src="/assets/logo.svg"
-                className=""
-                alt="Logo"
-              /> */}
-              <h1 className="font-weight-bold text-center titulo-login mb-4">
-                Login
+      <section className={"container"}>
+        <div className="col-lg-7 col-md-9 col-sm-12 m-auto card">
+          <form>
+            <h1 className="font-weight-bold text-center titulo-login mb-4">
+              Login
               </h1>
-              <div className={"form-group mb-4 text-left"}>
-                {erro}
-                <input
-                  type="text"
-                  className={
-                    "form-control custom-input" +
-                    (this.state.errors.email ? " is-invalid" : " ")
-                  }
-                  placeholder="Email"
-                  defaultValue={this.state.form.email}
-                  name="email"
-                  onChange={(str) => this.handleStates(str, null)}
-                // onBlur={this.validarEmail}
-                />
-                <div className="invalid-feedback">Verifique o seu email.</div>
-              </div>
-              <div className="form-group text-left">
-                <input
-                  type="password"
-                  className={
-                    "form-control custom-input" +
-                    (this.state.errors.senha ? " is-invalid" : " ")
-                  }
-                  placeholder="Senha"
-                  name="senha"
-                  value={this.state.form.senha}
-                  onChange={this.handlePassword}
-                  onBlur={this.validarSenha}
-                />
-                <div className="invalid-feedback">Campo obrigatório.</div>
-              </div>
-              <div className={"form-group text-center mt-md-5 mt-4"}>
-                <button
-                  disabled={
-                    Object.keys(this.state.errors).length > 0 || this.state.init
-                      ? "disabled"
-                      : ""
-                  }
-                  type="submit"
-                  className={"btn btn-custom-primary"}
-                  onClick={this.fazerLogin}
-                >
-                  ENTRAR
+            <div className={"form-group mb-4 text-left"}>
+              {erro}
+              <input
+                type="text"
+                className={
+                  "form-control custom-input" +
+                  (this.state.errors.email ? " is-invalid" : " ")
+                }
+                placeholder="Email"
+                value={this.state.form.email}
+                name="email"
+                onChange={(str) => this.handleStates(str, null)}
+                onBlur={this.validarEmail}
+              />
+              <div className="invalid-feedback">Verifique o seu email.</div>
+            </div>
+            <div className="form-group text-left">
+              <input
+                type="password"
+                className={
+                  "form-control custom-input" +
+                  (this.state.errors.senha ? " is-invalid" : " ")
+                }
+                placeholder="Senha"
+                name="senha"
+                value={this.state.form.senha}
+                onChange={(str) => this.handleStates(str, null)}
+                onBlur={this.validarSenha}
+              />
+              <div className="invalid-feedback">Campo obrigatório.</div>
+            </div>
+            <div>
+              <Link to={"/cadastrar/usuario"}>
+                Fazer cadastro
+              </Link>
+            </div>
+            <div className={"form-group text-center mt-md-5 mt-4"}>
+              <button
+                disabled={btnDisabled}
+                type="submit"
+                className={"btn btn-custom-primary"}
+                onClick={this.fazerLogin}
+              >
+                ENTRAR
                 </button>
-              </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </section>
     );
